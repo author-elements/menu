@@ -19,6 +19,11 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
 
       options: {
         readonly: true,
+        get: () => this.optionsElement.displayOptions
+      },
+
+      optionsElement: {
+        readonly: true,
         get: () => this.querySelector('author-options')
       },
 
@@ -161,9 +166,9 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         //   this.setAttribute('invalid', '')
         // }
 
-        if (afterChange && typeof afterChange === 'function') {
-          afterChange(evt.detail.previous, this.selectedOptions)
-        }
+        // if (afterChange && typeof afterChange === 'function') {
+        //   afterChange(evt.detail.previous, this.selectedOptions)
+        // }
       },
 
       removeOpenListeners: () => {
@@ -174,6 +179,10 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
 
       stateChangeHandler: evt => {
         let { name, value } = evt.detail
+
+        if (name === 'multiple' && value && this.hasAttribute('open')) {
+          this.removeAttribute('open')
+        }
 
         if (name === 'open') {
           if (!value) {
@@ -324,7 +333,7 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
     if (sourceElement.children.length > 0) {
       if (!this.multiple) {
         Array.from(sourceElement.children).forEach(option => {
-          if (option.index !== select.selectedIndex) {
+          if (option.index !== sourceElement.selectedIndex) {
             option.removeAttribute('selected')
           }
         })

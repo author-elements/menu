@@ -1,6 +1,6 @@
 {
   "name": "@author.io/element-menu",
-  "version": "1.0.1-beta.2",
+  "version": "1.0.1",
   "description": "author-menu custom element (web component).",
   "main": "dist/author-menu.min.js",
   "scripts": {
