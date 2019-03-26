@@ -1,0 +1,81 @@
+kind: pipeline
+name: release
+
+steps:
+  - name: autotag
+    image: node
+    environment:
+      GIT_USER:
+        from_secret: GITHUB_USERNAME
+      GIT_SECRET:
+        from_secret: GITHUB_KEY
+    commands:
+      - npm install -g @author.io/cicd-autotag
+      - autotag --allowInitialNpmPublish
+    when:
+      event:
+        - push
+  - name: tag_notification
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: SLACK_WEBHOOK
+      channel: releases
+      icon_url: https://avatars0.githubusercontent.com/u/46585558?s=32
+      template: >
+        <author-{{repo.name}}> autotag on {{build.event}} to {{repo.owner}}/{{repo.name}} failed ({{build.tag}}). See {{build.link}} for details.
+      icon_emoji: warning
+    when:
+      status: [ failure ]
+      event:
+        - push
+  - name: build
+    image: node
+    commands:
+      - npm install
+      - npm run build
+    when:
+      event:
+        - tag
+  - name: github_release
+    image: plugins/github-release
+    settings:
+      api_key:
+        from_secret: GITHUB_TOKEN
+      files: dist/**/*
+    when:
+      event:
+        - tag
+  - name: npm_release
+    image: plugins/npm
+    settings:
+      username:
+        from_secret: NPM_USERNAME
+      password:
+        from_secret: NPM_PASSWORD
+      email:
+        from_secret: NPM_EMAIL
+      registry: "https://registry.npmjs.org"
+    when:
+      event:
+        - tag
+  - name: release_notification
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: SLACK_WEBHOOK
+      channel: releases
+      icon_url: https://avatars0.githubusercontent.com/u/46585558?s=32
+      template: >
+        <author-{{repo.name}}> {{build.tag}} (build {{build.number}}) {{#success build.status}}released{{else}}failed{{/success}}.
+        {{build.link}}
+
+        {{#success build.status}}
+        Availability:
+        - CDN: https://cdn.author.io/{{repo.owner}}/{{repo.name}}/{{build.tag}}/author-{{repo.name}}.js
+        - npm: `npm install @author.io/element-{{repo.name}}@{{build.tag}}`
+        - Release: https://github.com/{{repo.owner}}/{{repo.name}}/releases/tag/{{build.tag}}
+        {{/success}}
+    when:
+      event:
+        - tag

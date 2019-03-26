@@ -1,0 +1,10 @@
+.*
+_*
+dist
+!.gitignore
+!.npmignore
+!.travis.yml
+!.drone.yml
+node_modules
+env.json
+*.log
