@@ -1,10 +1,12 @@
 {
   "name": "@author.io/element-menu",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "author-menu custom element (web component).",
   "main": "dist/author-menu.min.js",
   "scripts": {
     "build": "npm run clean && rollup -c ./rollup.release.config.js",
+    "build-dev": "npm run build && npm run build-showroom",
+    "build-showroom": "cd showroom/ && npm run build && cd ../",
     "clean": "node clean.js",
     "deploy": "npm run build && npm publish --access public",
     "test": "npm run build && karma start karma.conf.es6.js && karma start karma.conf.es6-modules.js && karma start karma.conf.es5.js && npm run test:syntax",

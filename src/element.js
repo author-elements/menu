@@ -163,7 +163,13 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
           this.removeAttribute('open')
         }
 
-        this.emit('options.selected', evt.detail.options, this.selectedOptionsElement)
+        if (this.selectedOptionsElement !== undefined) {
+          this.emit('options.selected', evt.detail.options, this.selectedOptionsElement)
+        }
+
+        if (this.inputElement !== undefined) {
+          this.emit('options.selected', evt.detail.options, this.inputElement)
+        }
 
         // if (this.checkValidity()) {
         //   this.removeAttribute('invalid')

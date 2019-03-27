@@ -1,0 +1,29 @@
+{
+  "name": "author-menu-showroom",
+  "version": "1.0.0",
+  "description": "Demo for author-menu component",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.js --prod",
+    "build-dev": "node build.js --dev",
+    "build-js": "node build.js --js-only",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Graham Butler",
+  "license": "MIT",
+  "devDependencies": {
+    "@chassis/core": "^2.3.3",
+    "productionline-web": "^1.1.8"
+  },
+  "dependencies": {
+    "@author.io/element-base": "^1.1.1",
+    "@author.io/element-control": "^1.0.8",
+    "@author.io/element-menu": "^1.0.1",
+    "@author.io/element-optgroup": "^1.0.1",
+    "@author.io/element-optgroup-label": "^1.0.1",
+    "@author.io/element-option": "^1.0.1",
+    "@author.io/element-options": "^1.0.5-beta.3",
+    "@author.io/element-select": "^1.0.7",
+    "@author.io/element-selected-options": "^1.0.1"
+  }
+}

@@ -1,0 +1,72 @@
+@chassis init;
+@chassis include anchor buttons form-controls author-datalist;
+
+.author-datalist {
+  & pre {
+    @chassis apply inline-block margin-bottom padding;
+    background: var(--grey-n00);
+
+    & code {
+      @chassis font-size small;
+    }
+  }
+
+  & ul {
+    list-style: disc;
+    @chassis apply inline-block margin-bottom;
+
+    & li {
+      margin-left: 1em;
+    }
+  }
+
+  & .theme {
+    @chassis font-size small;
+  }
+
+  & > header {
+    padding: 1.46em 0 .90169942em;
+    border-bottom: 4px solid var(--header-border-color);
+
+    & h1 {
+      flex: 1 1 auto;
+      margin: 0 1em 0 0;
+      @chassis font-size large;
+    }
+
+    & .links {
+      display: flex;
+      align-items: center;
+
+      & a {
+        margin-left: 1em;
+
+        &:first-of-type {
+          margin-left: 0;
+        }
+      }
+    }
+
+    @chassis viewport-width from medium {
+      padding-top: 2.36em;
+
+      & .width.constraint {
+        display: flex;
+      }
+    }
+  }
+
+  & main {
+    @chassis constrain-width;
+    padding-bottom: 3.618em;
+
+    & > * {
+      padding-top: 3.82em;
+    }
+  }
+
+  &[data-theme="dark"] {
+    background: var(--grey-n10);
+    color: white;
+  }
+}

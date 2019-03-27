@@ -1,0 +1,361 @@
+custom-properties {
+	--red: hsl(11,74%,54%);
+	--green: hsl(89,82%,40%);
+	--blue: #0099FF;
+	--yellow: hsl(55,100%,64%);
+
+	--font-family: -apple-system, BlinkMacSystemFont, 'Avenir Next', Avenir, Helvetica, Arial, sans-serif;
+	--text-color: rgb(68,68,68);
+
+	--header-border-color: var(--grey-n00);
+
+	--sidebar-link-border-color: var(--grey-n00);
+	--sidebar-link-hover-bg-color: var(--blue);
+	--sidebar-link-hover-text-color: white;
+
+	--footer-bg-color: white;
+  --footer-border-color: var(--grey-n00);
+}
+
+components {
+	anchor {
+		@state initial {
+			color: var(--blue);
+		}
+
+		@state hover {
+			color: color-mod(var(--blue) lightness(50%));
+			text-decoration: underline;
+		}
+
+		@state active {
+			color: color-mod(var(--blue) lightness(44%));
+		}
+
+		@state disabled {
+			color: var(--grey-n04);
+			text-decoration: none;
+		}
+	}
+
+	button {
+		@state initial {
+			background: var(--blue);
+			border-radius: .236em;
+			color: white;
+
+			& svg.icon {
+				stroke: currentColor;
+			}
+		}
+
+		@state hover {
+			background: color-mod(var(--blue) lightness(55%));
+		}
+
+		@state active {
+			background: color-mod(var(--blue) lightness(44%));
+		}
+
+		@state disabled {
+			opacity: .382;
+		}
+
+		@state focus {
+			outline: 0;
+		}
+	}
+
+	anchor-button {
+		@state initial {
+			background: var(--blue);
+			border-radius: .236em;
+			color: white;
+
+			& .icon {
+				stroke: currentColor;
+			}
+
+			& .test {
+				padding: .5em;
+				background: green;
+
+				& .test {
+					background: red;
+
+					& .test {
+						background: blue;
+					}
+				}
+			}
+		}
+
+		@state hover {
+			background: color-mod(var(--blue) lightness(55%));
+		}
+
+		@state active {
+			background: color-mod(var(--blue) lightness(44%));
+		}
+
+		@state disabled {
+			opacity: .382;
+		}
+	}
+
+	tag {
+		@state initial {
+			background: var(--green);
+			border-radius: .236em;
+			color: white;
+
+			& svg.icon {
+				stroke: currentColor;
+			}
+		}
+	}
+
+	table {
+		@state initial {
+			border-collapse: separate;
+			border-spacing: .382em 0;
+
+			& caption {
+				font-weight: 700;
+			}
+
+			& thead {
+				position: sticky;
+				top: 0;
+
+				border-bottom: 3px solid var(--grey-n03);
+				box-shadow: 0 3px 0 0 var(--grey-n03);
+			}
+
+			& tfoot {
+				border-top: 3px solid var(--grey-n03);
+			}
+
+			& tbody tr td {
+				border-bottom: 1px solid var(--grey-n03);
+			}
+
+			& tbody tr:last-child td {
+				border-bottom: 0;
+			}
+		}
+	}
+
+	overlay {
+		@state initial {
+			background: black;
+		}
+	}
+
+	modal {
+		@state initial {
+			background: white;
+		}
+	}
+
+	author-control {
+		@state initial {}
+
+		@state disabled {
+			opacity: .382;
+		}
+	}
+
+	input {
+		@state initial {
+			margin-top: 0;
+			box-shadow: inset 0 -2px 0 0 var(--grey-n04);
+		}
+
+		@state focus {
+			outline: 0;
+			box-shadow: inset 0 -2px 0 0 var(--blue);
+		}
+	}
+
+	textarea {
+		@state initial {
+			box-shadow: 0 0 0 2px var(--grey-n04);
+		}
+
+		@state focus {
+			outline: 0;
+			box-shadow: 0 0 0 2px var(--blue);
+		}
+	}
+
+	author-optgroup-label {
+		@state initial {
+			font-weight: 700;
+		}
+	}
+
+	author-optgroup {
+		@state initial {
+			margin: 0 .618em .618em;
+			border: 1px solid var(--grey-n04);
+		}
+	}
+
+	author-selected-options {
+		@state initial {
+			align-items: center;
+			justify-content: space-between;
+			z-index: 1;
+
+			& svg {
+				width: 1em;
+				height: 1em;
+				margin-left: 1em;
+				vertical-align: middle;
+			}
+		}
+	}
+
+	author-option {
+		@state initial {}
+
+		@state hover {
+			background: color-mod(black alpha(6.18%));
+		}
+	}
+
+	author-datalist {
+		@state initial {
+			position: relative;
+			display: flex;
+      flex-direction: column;
+			width: 100%;
+      vertical-align: middle;
+      outline: none;
+      cursor: pointer;
+			transition: all ease-in-out .1s;
+
+			& input {
+				margin: 0;
+			}
+
+			& author-options {
+				position: absolute;
+				top: 100%;
+				left: 0;
+				height: 0;
+				max-height: 16.18em;
+				min-width: 100%;
+				overflow: auto;
+
+				background: white;
+				box-shadow:
+					inset 2px 0 0 0 var(--blue),
+					inset -2px -2px 0 0 var(--blue),
+					0 .236em 1em 0 color-mod(black alpha(10%))
+				;
+			}
+		}
+
+		@state open {
+			box-shadow: inset 0 -2px 0 0 var(--blue);
+
+			author-options {
+				height: auto;
+			}
+		}
+
+		@state focus {
+			box-shadow: inset 0 -2px 0 0 var(--blue);
+		}
+
+		@state disabled {
+			opacity: .382;
+		}
+	}
+
+	author-select {
+		@state initial {
+			position: relative;
+			display: flex;
+      flex-direction: column;
+			width: 100%;
+      vertical-align: middle;
+      outline: none;
+      cursor: pointer;
+
+			border-radius: .236em;
+			box-shadow: inset 0 0 0 2px var(--grey-n04);
+			transition: all ease-in-out .1s;
+
+			& author-options {
+				height: 0;
+				max-height: 16.18em;
+				min-width: 100%;
+				overflow: auto;
+
+				border-radius: 0 0 .236em .236em;
+				background: white;
+				box-shadow:
+					inset 2px 0 0 0 var(--grey-n04),
+					inset -2px -2px 0 0 var(--grey-n04),
+					0 .236em 1em 0 color-mod(black alpha(10%))
+				;
+			}
+
+			& author-option[selected] {
+				background: var(--blue);
+				color: white;
+			}
+		}
+
+		@state open {
+			box-shadow: inset 0 0 0 2px var(--blue);
+			border-radius: .236em .236em 0 0;
+
+			& author-options {
+				position: absolute;
+				top: 100%;
+			  left: 0;
+				z-index: 999;
+
+				height: auto;
+
+				box-shadow:
+					inset 2px 0 0 0 var(--blue),
+					inset -2px -2px 0 0 var(--blue),
+					0 .236em 1em 0 color-mod(black alpha(10%))
+				;
+			}
+		}
+
+		@state focus {
+			box-shadow: inset 0 0 0 2px var(--blue);
+
+			& author-options {
+				box-shadow: inset 0 0 0 2px var(--blue);
+			}
+		}
+
+		@state disabled {
+			opacity: .382;
+		}
+
+		@state multiple {
+			& author-selected-options {
+				display: none;
+			}
+
+			& author-options {
+				height: auto;
+
+				box-shadow:
+					inset 2px 2px 0 0 var(--grey-n04),
+					inset -2px -2px 0 0 var(--grey-n04),
+					inset 0 0 1em 0 color-mod(black alpha(10%))
+				;
+			}
+		}
+	}
+}
