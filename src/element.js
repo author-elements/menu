@@ -163,14 +163,6 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
           this.removeAttribute('open')
         }
 
-        // if (this.selectedOptionsElement !== undefined) {
-        //   this.emit('options.selected', evt.detail.options, this.selectedOptionsElement)
-        // }
-        //
-        // if (this.inputElement !== undefined) {
-        //   this.emit('options.selected', evt.detail.options, this.inputElement)
-        // }
-
         // if (this.checkValidity()) {
         //   this.removeAttribute('invalid')
         // } else {
@@ -232,13 +224,6 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
               name: 'open',
               value: this.open
             })
-
-          case 'placeholder':
-            if (this.selectedOptionsElement) {
-              this.selectedOptionsElement.update()
-            }
-
-            break
 
             case 'size':
               return this.PRIVATE.throwSizeAttributeWarning()
@@ -351,16 +336,6 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
       }
 
       this.optionsElement.addOptions(sourceElement.children)
-
-      if (sourceElement.localName === 'select') {
-        let selectedOptionsElement = document.createElement('author-selected-options')
-        selectedOptionsElement.slot = 'selectedoptions'
-        this.appendChild(selectedOptionsElement)
-
-        if (!this.multiple) {
-          this.selectedOptionsElement.add(this.optionsElement.options[this.selectedIndex])
-        }
-      }
     }
 
     this.PRIVATE.injected = true
