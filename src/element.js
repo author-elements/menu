@@ -94,6 +94,11 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
             : -1
 
         switch (evt[this.keySource]) {
+          case 27:
+          case 'Escape':
+            this.PRIVATE.clear()
+            return this.close()
+
           case 13:
           case 'Enter':
           case 32:
@@ -150,7 +155,7 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
 
       optionSelectionHandler: evt => {
         evt.stopPropagation()
-        let { afterChange } = this.PRIVATE.middleware
+        // let { afterChange } = this.PRIVATE.middleware
 
         this.dispatchEvent(new Event('change', {}))
 
