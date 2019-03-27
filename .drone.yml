@@ -10,7 +10,7 @@ steps:
       GIT_SECRET:
         from_secret: GITHUB_KEY
     commands:
-      - npm install -g @author.io/cicd-autotag
+      - npm install -g @author.io/cicd-autotag@1.0.6
       - autotag --allowInitialNpmPublish
     when:
       event:
