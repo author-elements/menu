@@ -96,7 +96,6 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         switch (evt[this.keySource]) {
           case 27:
           case 'Escape':
-            this.PRIVATE.clear()
             this.open = false
             return
 
