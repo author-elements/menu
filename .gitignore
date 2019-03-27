@@ -1,6 +1,6 @@
 .*
 _*
-dist
+/dist
 !.gitignore
 !.npmignore
 !.travis.yml

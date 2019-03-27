@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html class="chassis" lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width" />
+
+    <title>&lt;author-menu&gt; Demo</title>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="lib/prismjs/prism.css">
+
+    <script src="https://cdn.author.io/ngn/latest/legacy.complete.min.js"></script>
+    <script src="https://cdn.author.io/ngnx/latest/complete.min.js"></script>
+
+    <script src="webcomponents/author-base.js"></script>
+    <script src="webcomponents/author-control.js"></script>
+    <script src="webcomponents/author-menu.js"></script>
+    <script src="webcomponents/author-selected-options.js"></script>
+    <script src="webcomponents/author-optgroup-label.js"></script>
+    <script src="webcomponents/author-optgroup.js"></script>
+    <script src="webcomponents/author-options.js"></script>
+    <script src="webcomponents/author-option.js"></script>
+    <script src="webcomponents/author-select.js"></script>
+  </head>
+
+  <body class="author-menu" data-theme="default">
+    <header>
+      <div class="width constraint">
+        <h1>&lt;author-menu&gt; Element Demo</h1>
+        <aside class="links">
+          <h2 class="hidden">Navigation</h2>
+          <a href="https://author.io" target="_blank">author.io</a>
+        </aside>
+      </div>
+    </header>
+
+    <main>
+      <div class="content">
+        <author-control class="theme">
+          <label>Theme</label>
+          <select placeholder="Select a Theme">
+            <option value="1">Default</option>
+            <option value="2">Dark</option>
+            <option value="3">Other</option>
+          </select>
+        </author-control>
+      </div>
+    </main>
+  </body>
+
+  <script src="lib/prismjs/prism.js"></script>
+  <script src="js/index.js"></script>
+</html>
