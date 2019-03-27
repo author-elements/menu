@@ -97,7 +97,8 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
           case 27:
           case 'Escape':
             this.PRIVATE.clear()
-            return this.close()
+            this.open = false
+            return
 
           case 13:
           case 'Enter':
