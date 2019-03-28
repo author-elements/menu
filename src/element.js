@@ -149,7 +149,10 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
               startIndex
             }, this.optionsElement)
 
-          default: return
+          case 9:
+          case 'Tab':
+            this.open = false
+            break
         }
       },
 
