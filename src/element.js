@@ -3,8 +3,14 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
     super(templateString || `{{TEMPLATE-STRING}}`)
 
     this.UTIL.defineProperties({
+      sourceForm: {
+        private: true,
+        default: null
+      },
+
       form: {
-        readonly: true
+        readonly: true,
+        get: () => this.PRIVATE.sourceForm
       },
 
       hoveredIndex: {
@@ -320,6 +326,8 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
     if (this.PRIVATE.injected) {
       return
     }
+
+    this.PRIVATE.sourceForm = sourceElement.form
 
     this.UTIL.defineProperty('sourceElement', {
       readonly: true,
