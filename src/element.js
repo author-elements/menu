@@ -81,10 +81,11 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
           return
         }
 
-        this.PRIVATE.close()
+        this.emit('state.change', {
+          name: 'open',
+          value: false
+        })
       },
-
-      close: () => this.open = this['force-open'],
 
       focusHandler: evt => this.on('keydown', this.PRIVATE.keydownHandler),
 
@@ -98,7 +99,10 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         switch (evt[this.keySource]) {
           case 27:
           case 'Escape':
-            return this.PRIVATE.close()
+            return this.emit('state.change', {
+              name: 'open',
+              value: false
+            })
 
           case 13:
           case 'Enter':
@@ -108,11 +112,17 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
 
             if (!this.multiple) {
               if (!this.open && (evt[this.keySource] === 32 || evt[this.keySource] === ' ')) {
-                return this.PRIVATE.open()
+                return this.emit('state.change', {
+                  name: 'open',
+                  value: true
+                })
               }
 
               if (this.hoveredIndex === this.selectedIndex || this.hoveredIndex === -1) {
-                return this.PRIVATE.close()
+                return this.emit('state.change', {
+                  name: 'open',
+                  value: false
+                })
               }
 
               this.selectedIndex = this.hoveredIndex
@@ -125,7 +135,10 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
             evt.preventDefault()
 
             if (!this.multiple && !this.open) {
-              return this.PRIVATE.open()
+              return this.emit('state.change', {
+                name: 'open',
+                value: true
+              })
             }
 
             return this.emit('keydown.arrowUp', {
@@ -138,7 +151,10 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
             evt.preventDefault()
 
             if (!this.multiple && !this.open) {
-              return this.PRIVATE.open()
+              return this.emit('state.change', {
+                name: 'open',
+                value: true
+              })
             }
 
             return this.emit('keydown.arrowDown', {
@@ -148,12 +164,12 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
 
           case 9:
           case 'Tab':
-            this.PRIVATE.close()
-            break
+            return this.emit('state.change', {
+              name: 'open',
+              value: false
+            })
         }
       },
-
-      open: () => this.open = true,
 
       optionSelectionHandler: evt => {
         evt.stopPropagation()
@@ -162,7 +178,10 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         this.dispatchEvent(new Event('change', {}))
 
         if (this.open) {
-          this.PRIVATE.close()
+          this.emit('state.change', {
+            name: 'open',
+            value: false
+          })
         }
 
         // if (this.checkValidity()) {
@@ -190,12 +209,16 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         }
 
         if (name === 'open') {
-          if (!value) {
-            return this.PRIVATE.removeOpenListeners()
-          }
-
           if (this.multiple) {
             return this.removeAttribute('open')
+          }
+
+          if (!value) {
+            if (!this['force-open']) {
+              return this.PRIVATE.removeOpenListeners()
+            }
+
+            return
           }
 
           this.optionsElement.unHoverAllOptions()
@@ -207,13 +230,10 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         this.UTIL.printToConsole(`"size" attribute is not supported. Please use CSS to set the height of the options panel instead.`, 'warning')
       },
 
-      toggleHandler: evt => {
-        if (this.open) {
-          return this.PRIVATE.close()
-        }
-
-        this.PRIVATE.open()
-      }//,
+      toggleHandler: evt => this.emit('state.change', {
+        name: 'open',
+        value: this.open
+      })//,
 
       // validationHandler: evt => this.emit('invalid')
     })
@@ -227,17 +247,17 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         }
 
         switch (attribute) {
-          case 'force-open':
-            return this.PRIVATE.open()
+          case 'force-open': return this.emit('state.change', {
+            name: 'open',
+            value: this['force-open']
+          })
 
-          case 'open':
-            return this.emit('state.change', {
-              name: 'open',
-              value: this.open
-            })
+          case 'open': return this.emit('state.change', {
+            name: 'open',
+            value: this.open
+          })
 
-            case 'size':
-              return this.PRIVATE.throwSizeAttributeWarning()
+          case 'size': return this.PRIVATE.throwSizeAttributeWarning()
         }
       },
 
