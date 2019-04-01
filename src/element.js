@@ -329,6 +329,12 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
 
     this.PRIVATE.sourceForm = sourceElement.form
 
+    if (this.PRIVATE.sourceForm !== null) {
+      this.UTIL.registerListeners(this.PRIVATE.sourceForm, {
+        reset: evt => this.deselectAll()
+      })
+    }
+
     this.UTIL.defineProperty('sourceElement', {
       readonly: true,
       default: sourceElement
