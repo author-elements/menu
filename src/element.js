@@ -228,14 +228,17 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         }
 
         switch (attribute) {
-          case 'open':
-            return this.emit('state.change', {
-              name: 'open',
-              value: this.hasAttribute('open')
-            })
+          case 'force-open': return this.emit('state.change', {
+            name: 'open',
+            value: true
+          })
 
-            case 'size':
-              return this.PRIVATE.throwSizeAttributeWarning()
+          case 'open': return this.emit('state.change', {
+            name: 'open',
+            value: this.hasAttribute('open') || this.hasAttribute('force-open')
+          })
+
+          case 'size': return this.PRIVATE.throwSizeAttributeWarning()
         }
       },
 
