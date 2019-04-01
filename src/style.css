@@ -7,3 +7,7 @@
 :host *:after {
   box-sizing: border-box;
 }
+
+:host([force-open]) ::slotted(author-options) {
+  height: auto !important;
+}
