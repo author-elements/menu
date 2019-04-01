@@ -185,17 +185,16 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
       },
 
       stateChangeHandler: evt => {
-        let { name, value } = evt.detail;
-
-        this.optionsElement.unHoverAllOptions();
+        let { name, value } = evt.detail
 
         switch (name) {
           case 'multiple':
-            value && this.removeAttribute('open');
+            value && this.removeAttribute('open')
             return
 
           case 'open':
             if (this.multiple) {
+              this.optionsElement.unHoverAllOptions()
               return this.removeAttribute('open')
             }
 
@@ -207,7 +206,7 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
               return this.PRIVATE.addOpenListeners()
             }
 
-            this.PRIVATE.removeOpenListeners();
+            this.PRIVATE.removeOpenListeners()
         }
       },
 
