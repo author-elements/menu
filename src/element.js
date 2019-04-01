@@ -227,6 +227,9 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         }
 
         switch (attribute) {
+          case 'force-open':
+            return this.PRIVATE.open()
+
           case 'open':
             return this.emit('state.change', {
               name: 'open',
