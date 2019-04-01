@@ -1,6 +1,6 @@
 // Copyright (c) 2019 Author.io. MIT licensed.
-// @author.io/element-select v1.0.7 available at github.com/author-elements/select
-// Last Build: 3/16/2019, 11:05:58 PM
+// @author.io/element-select v1.0.12 available at github.com/author-elements/select
+// Last Build: 3/28/2019, 2:29:20 AM
 var AuthorSelectElement = (function () {
   'use strict';
 
@@ -103,13 +103,33 @@ var AuthorSelectElement = (function () {
     return _get(target, property, receiver || target);
   }
 
+  function _toConsumableArray(arr) {
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+  }
+
+  function _arrayWithoutHoles(arr) {
+    if (Array.isArray(arr)) {
+      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+      return arr2;
+    }
+  }
+
+  function _iterableToArray(iter) {
+    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+  }
+
+  function _nonIterableSpread() {
+    throw new TypeError("Invalid attempt to spread non-iterable instance");
+  }
+
   if (!window.hasOwnProperty('AuthorBaseElement')) {
     console.error('[ERROR] <author-select> Required dependency "AuthorBaseElement" not found.');
     console.info('AuthorBaseElement is available at https://github.com/author-elements/base');
   }
 
   (function () {
-    var missingDependencies = Array.from(new Set(['author-selected-options', 'author-options', 'author-option', 'author-optgroup', 'author-optgroup-label'])).filter(function (dep) {
+    var missingDependencies = Array.from(new Set(['author-menu', 'author-selected-options', 'author-options', 'author-option', 'author-optgroup', 'author-optgroup-label'])).filter(function (dep) {
       return !customElements.get(dep);
     });
 
@@ -125,8 +145,8 @@ var AuthorSelectElement = (function () {
 
   var AuthorSelectElement =
   /*#__PURE__*/
-  function (_AuthorBaseElement) {
-    _inherits(AuthorSelectElement, _AuthorBaseElement);
+  function (_AuthorMenuElement) {
+    _inherits(AuthorSelectElement, _AuthorMenuElement);
 
     function AuthorSelectElement() {
       var _this;
@@ -136,250 +156,30 @@ var AuthorSelectElement = (function () {
       _this = _possibleConstructorReturn(this, _getPrototypeOf(AuthorSelectElement).call(this, "<template><style>@charset \"UTF-8\"; :host{display:inline-block;max-width:100%}:host *,:host :after,:host :before{box-sizing:border-box}author-select{display:inline-block;max-width:100%}author-select *,author-select :after,author-select :before{box-sizing:border-box}</style><slot name=\"afterbegin\"></slot><slot name=\"beforeselectedoptions\"></slot><slot name=\"selectedoptions\"></slot><slot name=\"afterselectedoptions\"></slot><slot name=\"beforeoptions\"></slot><slot name=\"options\"></slot><slot name=\"afteroptions\"></slot><slot name=\"beforeend\"></slot></template>"));
 
       _this.UTIL.defineProperties({
-        form: {
-          readonly: true
-        },
-        hoveredIndex: {
-          readonly: true,
-          get: function get() {
-            return _this.optionsElement.hoveredIndex;
-          }
-        },
-        injected: {
-          private: true,
-          default: false
-        },
-        labels: {
-          private: true
-        },
-        middleware: {
-          private: true,
-          default: {
-            beforeChange: null,
-            afterChange: null
-          }
-        },
-        options: {
-          readonly: true,
-          get: function get() {
-            return _this.optionsElement.displayOptions;
-          }
-        },
-        optionsElement: {
-          readonly: true,
-          get: function get() {
-            return _this.querySelector('author-options');
-          }
-        },
-        selectedOptions: {
-          readonly: true,
-          get: function get() {
-            return _this.optionsElement ? _this.optionsElement.selectedOptions : null;
-          }
-        },
         selectedOptionsElement: {
           readonly: true,
           get: function get() {
             return _this.querySelector('author-selected-options');
           }
         },
-        title: {
-          private: true,
-          default: ''
-        },
         type: {
           readonly: true,
           get: function get() {
             return _this.multiple ? 'select-multiple' : 'select-one';
           }
-        },
-        willValidate: {
-          readonly: true,
-          get: function get() {
-            return _this.sourceElement.willValidate;
-          }
-        },
-        validationMessage: {
-          readonly: true,
-          get: function get() {
-            return _this.sourceElement.validationMessage;
-          }
-        },
-        validity: {
-          readonly: true,
-          get: function get() {
-            return _this.sourceElement.validity;
-          }
         }
       });
 
       _this.UTIL.defineAttributes({
-        name: '',
-        placeholder: '',
-        autofocus: false,
-        disabled: false,
-        multiple: false,
-        open: false,
-        required: false,
-        size: {
-          get: function get() {
-            return _this.PRIVATE.throwSizeAttributeWarning();
-          },
-          set: function set() {
-            return _this.PRIVATE.throwSizeAttributeWarning();
-          }
-        }
-      });
-
-      _this.UTIL.definePrivateMethods({
-        addOpenListeners: function addOpenListeners() {
-          document.addEventListener('mousedown', _this.PRIVATE.bodyMousedownHandler);
-          document.addEventListener('touchcancel', _this.PRIVATE.bodyMousedownHandler);
-          document.addEventListener('touchend', _this.PRIVATE.bodyMousedownHandler);
-        },
-        blurHandler: function blurHandler(evt) {
-          return _this.off('keydown', _this.PRIVATE.keydownHandler);
-        },
-        bodyMousedownHandler: function bodyMousedownHandler(evt) {
-          if (evt.target === _assertThisInitialized(_this) || _this.contains(evt.target)) {
-            return;
-          }
-
-          _this.open = false;
-        },
-        focusHandler: function focusHandler(evt) {
-          return _this.on('keydown', _this.PRIVATE.keydownHandler);
-        },
-        keydownHandler: function keydownHandler(evt) {
-          var startIndex = _this.hoveredIndex > -1 ? _this.hoveredIndex : _this.selectedIndex > -1 ? _this.selectedIndex : -1;
-
-          switch (evt[_this.keySource]) {
-            case 13:
-            case 'Enter':
-            case 32:
-            case ' ':
-              evt.preventDefault();
-
-              if (!_this.multiple) {
-                if (!_this.open && (evt[_this.keySource] === 32 || evt[_this.keySource] === ' ')) {
-                  _this.open = true;
-                  return;
-                }
-
-                if (_this.hoveredIndex === _this.selectedIndex || _this.hoveredIndex === -1) {
-                  _this.open = false;
-                  return;
-                }
-
-                _this.selectedIndex = _this.hoveredIndex;
-              }
-
-              break;
-
-            case 38:
-            case 'ArrowUp':
-              evt.preventDefault();
-
-              if (!_this.multiple && !_this.open) {
-                _this.open = true;
-                return;
-              }
-
-              return _this.emit('keydown.arrowUp', {
-                shiftKey: evt.shiftKey,
-                startIndex: startIndex
-              }, _this.optionsElement);
-
-            case 40:
-            case 'ArrowDown':
-              evt.preventDefault();
-
-              if (!_this.multiple && !_this.open) {
-                _this.open = true;
-                return;
-              }
-
-              return _this.emit('keydown.arrowDown', {
-                shiftKey: evt.shiftKey,
-                startIndex: startIndex
-              }, _this.optionsElement);
-
-            default:
-              return;
-          }
-        },
-        optionSelectionHandler: function optionSelectionHandler(evt) {
-          evt.stopPropagation();
-          var afterChange = _this.PRIVATE.middleware.afterChange;
-
-          _this.dispatchEvent(new Event('change', {}));
-
-          if (_this.open) {
-            _this.removeAttribute('open');
-          }
-
-          _this.emit('options.selected', evt.detail.options, _this.selectedOptionsElement); // if (this.checkValidity()) {
-          //   this.removeAttribute('invalid')
-          // } else {
-          //   this.setAttribute('invalid', '')
-          // }
-
-
-          if (afterChange && typeof afterChange === 'function') {
-            afterChange(evt.detail.previous, _this.selectedOptions);
-          }
-        },
-        removeOpenListeners: function removeOpenListeners() {
-          document.removeEventListener('mousedown', _this.PRIVATE.bodyMousedownHandler);
-          document.removeEventListener('touchcancel', _this.PRIVATE.bodyMousedownHandler);
-          document.removeEventListener('touchend', _this.PRIVATE.bodyMousedownHandler);
-        },
-        stateChangeHandler: function stateChangeHandler(evt) {
-          var _evt$detail = evt.detail,
-              name = _evt$detail.name,
-              value = _evt$detail.value;
-
-          switch (name) {
-            case 'open':
-              if (!value) {
-                return _this.PRIVATE.removeOpenListeners();
-              }
-
-              if (_this.multiple) {
-                return _this.removeAttribute('open');
-              }
-
-              _this.optionsElement.unHoverAllOptions();
-
-              return _this.PRIVATE.addOpenListeners();
-
-            case 'multiple':
-              if (value && _this.hasAttribute('open')) {
-                _this.removeAttribute('open');
-              }
-
-              break;
-
-            default:
-              return;
-          }
-        },
-        throwSizeAttributeWarning: function throwSizeAttributeWarning() {
-          _this.UTIL.printToConsole("\"size\" attribute is not supported. Please use CSS to set the height of the options panel instead.", 'warning');
-        },
-        toggleHandler: function toggleHandler(evt) {
-          return _this.open = !_this.open;
-        } //,
-        // validationHandler: evt => this.emit('invalid')
-
+        multiple: false
       });
 
       _this.UTIL.registerListeners(_assertThisInitialized(_this), {
         'attribute.change': function attributeChange(evt) {
-          var _evt$detail2 = evt.detail,
-              attribute = _evt$detail2.attribute,
-              oldValue = _evt$detail2.oldValue,
-              newValue = _evt$detail2.newValue;
+          var _evt$detail = evt.detail,
+              attribute = _evt$detail.attribute,
+              oldValue = _evt$detail.oldValue,
+              newValue = _evt$detail.newValue;
 
           if (newValue === oldValue) {
             return;
@@ -392,47 +192,16 @@ var AuthorSelectElement = (function () {
                 value: _this.multiple
               });
 
-            case 'open':
-              return _this.emit('state.change', {
-                name: 'open',
-                value: _this.open
-              });
-
             case 'placeholder':
               if (_this.selectedOptionsElement) {
                 _this.selectedOptionsElement.update();
               }
 
               break;
-
-            case 'size':
-              return _this.PRIVATE.throwSizeAttributeWarning();
-
-            default:
-              return;
           }
         },
-        // connected: () => {
-        //   this.sourceElement.addEventListener('invalid', this.PRIVATE.validationHandler)
-        //
-        //   if (!this.checkValidity()) {
-        //     this.setAttribute('invalid', '')
-        //   }
-        // },
-        // disconnected: () => {
-        //   this.sourceElement.removeEventListener('invalid', this.PRIVATE.validationHandler)
-        // },
-        blur: _this.PRIVATE.blurHandler,
-        focus: _this.PRIVATE.focusHandler,
-        'options.selected': _this.PRIVATE.optionSelectionHandler,
-        'state.change': _this.PRIVATE.stateChangeHandler,
-        toggle: _this.PRIVATE.toggleHandler,
-        rendered: function rendered() {
-          if (!_this.hasAttribute('tabindex')) {
-            _this.setAttribute('tabindex', 0);
-          }
-
-          _this.autofocus && _this.focus();
+        'options.selected': function optionsSelected(evt) {
+          return _this.emit('options.selected', evt.detail.options, _this.selectedOptionsElement);
         }
       });
 
@@ -440,185 +209,42 @@ var AuthorSelectElement = (function () {
     }
 
     _createClass(AuthorSelectElement, [{
-      key: "add",
-      value: function add(option, index) {
-        this.optionsElement.addOption(option, index);
-      }
-    }, {
-      key: "checkValidity",
-      value: function checkValidity() {
-        return this.sourceElement.checkValidity();
-      }
-    }, {
       key: "clear",
       value: function clear() {
-        this.optionsElement.clear();
+        _get(_getPrototypeOf(AuthorSelectElement.prototype), "clear", this).call(this);
+
         this.selectedOptionsElement.clear();
       }
     }, {
-      key: "deselectAll",
-      value: function deselectAll() {
-        this.optionsElement.deselectAll();
-      }
-    }, {
       key: "inject",
-      value: function inject(select, labels) {
-        // Prevent re-injections
-        if (this.PRIVATE.injected) {
-          return;
-        }
+      value: function inject(sourceElement) {
+        var labels = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-        this.UTIL.defineProperty('sourceElement', {
-          readonly: true,
-          default: select
-        });
-        var selectedOptionsElement = document.createElement('author-selected-options');
-        selectedOptionsElement.slot = 'selectedoptions';
-        var optionsElement = document.createElement('author-options');
-        optionsElement.slot = 'options';
-        this.PRIVATE.labels = labels;
-        this.appendChild(selectedOptionsElement);
-        this.appendChild(optionsElement);
+        _get(_getPrototypeOf(AuthorSelectElement.prototype), "inject", this).call(this, sourceElement, labels);
 
-        if (select.children.length > 0) {
-          if (!this.multiple) {
-            Array.from(select.children).forEach(function (option) {
-              if (option.index !== select.selectedIndex) {
-                option.removeAttribute('selected');
-              }
-            });
-          }
-
-          this.optionsElement.addOptions(select.children);
+        if (sourceElement.localName === 'select') {
+          var selectedOptionsElement = document.createElement('author-selected-options');
+          selectedOptionsElement.slot = 'selectedoptions';
+          this.appendChild(selectedOptionsElement);
 
           if (!this.multiple) {
-            this.selectedOptionsElement.add(this.optionsElement.options[this.selectedIndex]);
+            var selectedOption = this.optionsElement.options[this.selectedIndex];
+
+            if (selectedOption) {
+              this.selectedOptionsElement.add(selectedOption);
+            }
           }
         }
-
-        this.PRIVATE.injected = true;
-      }
-    }, {
-      key: "item",
-      value: function item(index) {
-        return this.optionsElement.item(index);
-      }
-    }, {
-      key: "namedItem",
-      value: function namedItem(id) {
-        return this.optionsElement.namedItem(id);
-      }
-      /**
-       * method querySelector
-       * @param  {string} selector
-       * @return {HTMLElement}
-       * @override
-       */
-
-    }, {
-      key: "querySelector",
-      value: function querySelector(selector) {
-        if (selector !== ':checked') {
-          return _get(_getPrototypeOf(AuthorSelectElement.prototype), "querySelector", this).call(this, selector);
-        }
-
-        return this.selectedOptions.length > 0 ? this.selectedOptions[0] : null;
-      }
-      /**
-       * method querySelectorAll
-       * @param  {string} selector
-       * @return {NodeList}
-       * @override
-       */
-
-    }, {
-      key: "querySelectorAll",
-      value: function querySelectorAll(selector) {
-        if (selector !== ':checked') {
-          return _get(_getPrototypeOf(AuthorSelectElement.prototype), "querySelectorAll", this).call(this, selector);
-        }
-
-        return this.optionsElement.querySelectorAll('[selected]');
-      }
-    }, {
-      key: "remove",
-      value: function remove() {
-        var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-        if (index === null) {
-          return _get(_getPrototypeOf(AuthorSelectElement.prototype), "remove", this).call(this);
-        }
-
-        this.optionsElement.removeOptionByIndex(index);
-      }
-    }, {
-      key: "reportValidity",
-      value: function reportValidity() {
-        var isValid = this.sourceElement.checkValidity();
-
-        if (isValid) {
-          this.removeAttribute('invalid');
-        } else {
-          this.setAttribute('invalid', '');
-        }
-      }
-    }, {
-      key: "setCustomValidity",
-      value: function setCustomValidity(string) {
-        this.sourceElement.setCustomValidity(string);
-      }
-    }, {
-      key: "afterChange",
-      get: function get() {
-        return this.PRIVATE.middleware.afterChange;
-      },
-      set: function set(func) {
-        this.PRIVATE.middleware.afterChange = func.bind(this);
-      }
-    }, {
-      key: "beforeChange",
-      get: function get() {
-        return this.PRIVATE.middleware.beforeChange;
-      },
-      set: function set(func) {
-        this.PRIVATE.middleware.beforeChange = func.bind(this);
-      }
-    }, {
-      key: "length",
-      get: function get() {
-        return this.options.length;
-      }
-    }, {
-      key: "selectedIndex",
-      get: function get() {
-        return this.optionsElement ? this.optionsElement.selectedIndex : -1;
-      },
-      set: function set(index) {
-        if (index < 0) {
-          return this.deselectAll();
-        }
-
-        this.optionsElement.selectedIndex = index;
-      }
-    }, {
-      key: "value",
-      get: function get() {
-        if (this.selectedOptions.length === 0) {
-          return null;
-        }
-
-        var selectedOption = this.selectedOptions.item(0);
-        return selectedOption ? selectedOption.value || selectedOption.text : null;
       }
     }], [{
       key: "observedAttributes",
       get: function get() {
-        return ['autofocus', 'disabled', 'multiple', 'name', 'open', 'placeholder', 'tabindex', 'size'];
+        return [].concat(_toConsumableArray(AuthorMenuElement.observedAttributes), ['multiple']);
       }
     }]);
 
     return AuthorSelectElement;
-  }(AuthorBaseElement(HTMLElement));
+  }(AuthorMenuElement);
 
   customElements.define('author-select', AuthorSelectElement);
 

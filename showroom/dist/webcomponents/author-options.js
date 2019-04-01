@@ -1,6 +1,6 @@
 // Copyright (c) 2019 Author.io. MIT licensed.
-// @author.io/element-options v1.0.5-beta.3 available at github.com/author-elements/options
-// Last Build: 3/21/2019, 4:53:37 AM
+// @author.io/element-options v1.0.17 available at github.com/author-elements/options
+// Last Build: 3/28/2019, 1:18:11 AM
 var AuthorOptionsElement = (function () {
   'use strict';
 
@@ -15,6 +15,24 @@ var AuthorOptionsElement = (function () {
       this.UTIL.defineProperties({
         cherryPickedOptions: {
           private: true
+        },
+
+        filteredOptions: {
+          readonly: true,
+          get: () => {
+            let { options } = this;
+
+            for (let filter in this.PRIVATE.filters) {
+              options = this.PRIVATE.filters[filter]();
+            }
+
+            return Array.isArray(options) ? options : []
+          }
+        },
+
+        filters: {
+          private: true,
+          default: {}
         },
 
         form: {
@@ -120,6 +138,11 @@ var AuthorOptionsElement = (function () {
 
         selectionStartIndex: {
           private: true
+        },
+
+        visibleOptions: {
+          readonly: true,
+          get: () => this.options.filter(option => !option.hidden)
         }
       });
 
@@ -133,7 +156,7 @@ var AuthorOptionsElement = (function () {
                 return
 
               default:
-                return this.hoverOption(startIndex + 1)
+                return this.PRIVATE.hoverNextOption(startIndex)
             }
 
             return
@@ -164,7 +187,7 @@ var AuthorOptionsElement = (function () {
                 return
 
               default:
-                return this.hoverOption(startIndex - 1)
+                return this.PRIVATE.hoverPreviousOption(startIndex)
             }
 
             return
@@ -286,6 +309,18 @@ var AuthorOptionsElement = (function () {
                   selected: sourceElement.selected,
                   value: sourceElement.hasAttribute('value') ? sourceElement.getAttribute('value').trim() : null,
                   text: sourceElement.text.trim()
+                },
+
+                setAttr: (name, value) => {
+                  this.sourceElement[name] = value;
+
+                  if (typeof value === 'boolean') {
+                    value ? this.displayElement.setAttribute(name, '') : this.displayElement.removeAttribute(name);
+                  } else {
+                    this.displayElement.setAttribute(name, value);
+                  }
+
+                  _p.get(this).attributes[name] = value;
                 }
               });
             }
@@ -295,7 +330,15 @@ var AuthorOptionsElement = (function () {
             }
 
             set disabled (bool) {
-              this.setAttr('disabled', bool);
+              _p.get(this).setAttr('disabled', bool);
+            }
+
+            get hidden () {
+              return this.displayElement.hidden
+            }
+
+            set hidden (bool) {
+              this.displayElement.hidden = bool;
             }
 
             get index () {
@@ -307,7 +350,7 @@ var AuthorOptionsElement = (function () {
             }
 
             set id (id) {
-              this.setAttr('id', id);
+              _p.get(this).setAttr('id', id);
             }
 
             get selected () {
@@ -315,7 +358,7 @@ var AuthorOptionsElement = (function () {
             }
 
             set selected (bool) {
-              this.setAttr('selected', bool);
+              _p.get(this).setAttr('selected', bool);
             }
 
             get label () {
@@ -323,7 +366,7 @@ var AuthorOptionsElement = (function () {
             }
 
             set label (label) {
-              this.setAttr('label', label);
+              _p.get(this).setAttr('label', label);
             }
 
             get text () {
@@ -331,7 +374,7 @@ var AuthorOptionsElement = (function () {
             }
 
             set text (text) {
-              this.setAttr('text', text);
+              _p.get(this).setAttr('text', text);
             }
 
             get value () {
@@ -339,29 +382,47 @@ var AuthorOptionsElement = (function () {
             }
 
             set value (value) {
-              this.setAttr('value', value);
+              _p.get(this).setAttr('value', value);
             }
 
             remove () {
               this.sourceElement.remove();
               this.displayElement.remove();
             }
-
-            setAttr (name, value) {
-              this.sourceElement[name] = value;
-
-              if (typeof value === 'boolean') {
-                value ? this.displayElement.setAttribute(name, '') : this.displayElement.removeAttribute(name);
-              } else {
-                this.displayElement.setAttribute(name, value);
-              }
-
-              _p.get(this).attributes[name] = value;
-            }
           }
         },
 
         getCurrentSelection: () => this.options.filter(option => option.selected),
+
+        getPreviousVisibleOption: startIndex => {
+          let index = startIndex - 1;
+          let option = this.options[index];
+
+          if (!option) {
+            return null
+          }
+
+          if (option.hidden) {
+            option = this.PRIVATE.getPreviousVisibleOption(index);
+          }
+
+          return option
+        },
+
+        getNextVisibleOption: startIndex => {
+          let index = startIndex + 1;
+          let option = this.options[index];
+
+          if (!option) {
+            return null
+          }
+
+          if (option.hidden) {
+            option = this.PRIVATE.getNextVisibleOption(index);
+          }
+
+          return option
+        },
 
         handleClickSelection: (detail, cb) => {
           let {
@@ -435,6 +496,26 @@ var AuthorOptionsElement = (function () {
           }
         },
 
+        hoverPreviousOption: (startIndex) => {
+          let option = this.PRIVATE.getPreviousVisibleOption(startIndex);
+
+          if (!option || option.index === startIndex) {
+            return
+          }
+
+          this.hoverOption(option.index);
+        },
+
+        hoverNextOption: (startIndex) => {
+          let option = this.PRIVATE.getNextVisibleOption(startIndex);
+
+          if (!option || option.index === startIndex) {
+            return
+          }
+
+          this.hoverOption(option.index);
+        },
+
         optionSelectionHandler: evt => {
           let {
             cherryPickedOptions,
@@ -461,25 +542,33 @@ var AuthorOptionsElement = (function () {
               return
             }
 
-            let { beforeChange } = this.parentNode;
-
-            let detail = {
+            this.deselectAll();
+            selection.selectAll();
+            this.emit('options.selected', {
               options: selection.options,
               previous: this.selectedOptions,
               next: new (generateAuthorHTMLCollectionConstructor())(selection.displayElements)
-            };
+            }, this.parentNode);
 
-            let cb = () => {
-              this.deselectAll();
-              selection.selectAll();
-              return this.emit('options.selected', detail, this.parentNode)
-            };
-
-            if (!(beforeChange && typeof beforeChange === 'function')) {
-              return cb()
-            }
-
-            beforeChange(this.selectedOptions, detail.next, cb);
+            // let { beforeChange } = this.parentNode
+            //
+            // let detail = {
+            //   options: selection.options,
+            //   previous: this.selectedOptions,
+            //   next: new (generateAuthorHTMLCollectionConstructor())(selection.displayElements)
+            // }
+            //
+            // let cb = () => {
+            //   this.deselectAll()
+            //   selection.selectAll()
+            //   return this.emit('options.selected', detail, this.parentNode)
+            // }
+            //
+            // if (!(beforeChange && typeof beforeChange === 'function')) {
+            //   return cb()
+            // }
+            //
+            // beforeChange(this.selectedOptions, detail.next, cb)
           };
 
           if (!this.multiple) {
@@ -554,6 +643,37 @@ var AuthorOptionsElement = (function () {
         type: 'readonly',
         message: `"selectionStartIndex" cannot be set manually.`
       });
+    }
+
+    addFilter (key = this.UTIL.generateGuid('filter_'), func) {
+      if (typeof func !== 'function') {
+        this.UTIL.throwError({
+          type: 'type',
+          message: `Filter must be a function`
+        });
+      }
+
+      if (this.PRIVATE.filters.hasOwnProperty(key)) {
+        console.warn(`Filter "${key}" alredy exists! Overwriting...`);
+      }
+
+      this.PRIVATE.filters[key] = func;
+    }
+
+    hasFilter (filter) {
+      return this.PRIVATE.filters.hasOwnProperty(filter)
+    }
+
+    removeFilter (key) {
+      if (!this.PRIVATE.filters.hasOwnProperty(key)) {
+        return console.warn(`Filter "${key}" not found.`)
+      }
+
+      delete this.PRIVATE.filters[key];
+    }
+
+    removeAllFilters () {
+      this.PRIVATE.filters = {};
     }
 
     addOptgroup (optgroup) {
@@ -638,7 +758,7 @@ var AuthorOptionsElement = (function () {
 
       option.selected = false;
 
-      if (this.PRIVATE.isSlave) {
+      if (this.PRIVATE.isSlave && this.selectedOptionsElement !== undefined) {
         this.parentNode.selectedOptionsElement.remove(option, updateList);
       }
     }
@@ -647,6 +767,18 @@ var AuthorOptionsElement = (function () {
       this.options.filter(option => option.selected).forEach((option, index, options) => {
         this.deselect(option, index = options.length - 1 && showPlaceholder);
       });
+    }
+
+    find (query, caseSensitive = false) {
+      let results = Array.from(this.options).filter(option => {
+        let value = caseSensitive ? option.value : option.value.toLowerCase();
+        let text = caseSensitive ? option.text : option.text.toLowerCase();
+        query = caseSensitive ? query : query.toLowerCase();
+
+        return value.indexOf(query) >= 0 || text.indexOf(query) >= 0
+      });
+
+      return Array.isArray(results) ? results : []
     }
 
     hoverOption (index) {

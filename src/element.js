@@ -81,8 +81,10 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
           return
         }
 
-        this.open = false
+        this.PRIVATE.close()
       },
+
+      close: () => this.open = this['force-open'],
 
       focusHandler: evt => this.on('keydown', this.PRIVATE.keydownHandler),
 
@@ -96,8 +98,7 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         switch (evt[this.keySource]) {
           case 27:
           case 'Escape':
-            this.open = false
-            return
+            return this.PRIVATE.close()
 
           case 13:
           case 'Enter':
@@ -107,13 +108,11 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
 
             if (!this.multiple) {
               if (!this.open && (evt[this.keySource] === 32 || evt[this.keySource] === ' ')) {
-                this.open = true
-                return
+                return this.PRIVATE.open()
               }
 
               if (this.hoveredIndex === this.selectedIndex || this.hoveredIndex === -1) {
-                this.open = false
-                return
+                return this.PRIVATE.close()
               }
 
               this.selectedIndex = this.hoveredIndex
@@ -126,8 +125,7 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
             evt.preventDefault()
 
             if (!this.multiple && !this.open) {
-              this.open = true
-              return
+              return this.PRIVATE.open()
             }
 
             return this.emit('keydown.arrowUp', {
@@ -140,8 +138,7 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
             evt.preventDefault()
 
             if (!this.multiple && !this.open) {
-              this.open = true
-              return
+              return this.PRIVATE.open()
             }
 
             return this.emit('keydown.arrowDown', {
@@ -151,10 +148,12 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
 
           case 9:
           case 'Tab':
-            this.open = false
+            this.PRIVATE.close()
             break
         }
       },
+
+      open: () => this.open = true,
 
       optionSelectionHandler: evt => {
         evt.stopPropagation()
@@ -163,7 +162,7 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         this.dispatchEvent(new Event('change', {}))
 
         if (this.open) {
-          this.removeAttribute('open')
+          this.PRIVATE.close()
         }
 
         // if (this.checkValidity()) {
@@ -208,7 +207,13 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
         this.UTIL.printToConsole(`"size" attribute is not supported. Please use CSS to set the height of the options panel instead.`, 'warning')
       },
 
-      toggleHandler: evt => this.open = !this.open//,
+      toggleHandler: evt => {
+        if (this.open) {
+          return this.PRIVATE.close()
+        }
+
+        this.PRIVATE.open()
+      }//,
 
       // validationHandler: evt => this.emit('invalid')
     })

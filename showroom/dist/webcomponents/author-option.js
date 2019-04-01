@@ -1,6 +1,6 @@
 // Copyright (c) 2019 Author.io. MIT licensed.
-// @author.io/element-option v1.0.3 available at github.com/author-elements/option
-// Last Build: 3/27/2019, 4:39:29 AM
+// @author.io/element-option v1.0.4 available at github.com/author-elements/option
+// Last Build: 3/27/2019, 6:23:33 AM
 var AuthorOptionElement = (function () {
   'use strict';
 
@@ -14,6 +14,7 @@ var AuthorOptionElement = (function () {
 
       this.UTIL.defineAttributes({
         disabled: false,
+        hidden: false,
         hover: false,
         id: '',
         label: '',

@@ -17,13 +17,13 @@
   },
   "dependencies": {
     "@author.io/element-base": "^1.1.1",
-    "@author.io/element-control": "^1.0.8",
-    "@author.io/element-menu": "^1.0.1",
+    "@author.io/element-control": "^1.0.11",
+    "@author.io/element-menu": "^1.0.7",
     "@author.io/element-optgroup": "^1.0.1",
     "@author.io/element-optgroup-label": "^1.0.1",
-    "@author.io/element-option": "^1.0.1",
-    "@author.io/element-options": "^1.0.5-beta.3",
-    "@author.io/element-select": "^1.0.7",
+    "@author.io/element-option": "^1.0.4",
+    "@author.io/element-options": "^1.0.17",
+    "@author.io/element-select": "^1.0.12",
     "@author.io/element-selected-options": "^1.0.1"
   }
 }

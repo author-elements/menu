@@ -1,6 +1,6 @@
 // Copyright (c) 2019 Author.io. MIT licensed.
-// @author.io/element-menu v1.0.2 available at github.com/author-elements/menu
-// Last Build: 3/27/2019, 5:05:52 AM
+// @author.io/element-menu v1.0.7 available at github.com/author-elements/menu
+// Last Build: 3/28/2019, 1:29:32 AM
 var AuthorMenuElement = (function () {
   'use strict';
 
@@ -235,9 +235,8 @@ var AuthorMenuElement = (function () {
           switch (evt[_this.keySource]) {
             case 27:
             case 'Escape':
-              _this.PRIVATE.clear();
-
-              return _this.close();
+              _this.open = false;
+              return;
 
             case 13:
             case 'Enter':
@@ -289,8 +288,10 @@ var AuthorMenuElement = (function () {
                 startIndex: startIndex
               }, _this.optionsElement);
 
-            default:
-              return;
+            case 9:
+            case 'Tab':
+              _this.open = false;
+              break;
           }
         },
         optionSelectionHandler: function optionSelectionHandler(evt) {
@@ -300,9 +301,7 @@ var AuthorMenuElement = (function () {
 
           if (_this.open) {
             _this.removeAttribute('open');
-          }
-
-          _this.emit('options.selected', evt.detail.options, _this.selectedOptionsElement); // if (this.checkValidity()) {
+          } // if (this.checkValidity()) {
           //   this.removeAttribute('invalid')
           // } else {
           //   this.setAttribute('invalid', '')
@@ -367,13 +366,6 @@ var AuthorMenuElement = (function () {
                 name: 'open',
                 value: _this.open
               });
-
-            case 'placeholder':
-              if (_this.selectedOptionsElement) {
-                _this.selectedOptionsElement.update();
-              }
-
-              break;
 
             case 'size':
               return _this.PRIVATE.throwSizeAttributeWarning();
@@ -462,16 +454,6 @@ var AuthorMenuElement = (function () {
           }
 
           this.optionsElement.addOptions(sourceElement.children);
-
-          if (sourceElement.localName === 'select') {
-            var selectedOptionsElement = document.createElement('author-selected-options');
-            selectedOptionsElement.slot = 'selectedoptions';
-            this.appendChild(selectedOptionsElement);
-
-            if (!this.multiple) {
-              this.selectedOptionsElement.add(this.optionsElement.options[this.selectedIndex]);
-            }
-          }
         }
 
         this.PRIVATE.injected = true;
