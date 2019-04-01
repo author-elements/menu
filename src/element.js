@@ -58,6 +58,7 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
       placeholder: '',
       autofocus: false,
       disabled: false,
+      'force-open': false,
       open: false,
       required: false,
 
