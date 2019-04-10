@@ -309,6 +309,22 @@ class AuthorMenuElement extends AuthorBaseElement(HTMLElement) {
     this.optionsElement.addOption(option, index)
   }
 
+  addFilter (key, func) {
+    this.optionsElement.addFilter(key, func)
+  }
+
+  hasFilter (key) {
+    return this.optionsElement.hasFilter(key)
+  }
+
+  removeAllFilters () {
+    this.optionsElement.removeAllFilters()
+  }
+
+  removeFilter () {
+    this.optionsElement.removeFilter(key)
+  }
+
   checkValidity () {
     return this.sourceElement.checkValidity()
   }
